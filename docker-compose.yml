@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: fuzzy_telegram
+      MYSQL_USER: fuzzy
+      MYSQL_PASSWORD: telegram
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - db
+    environment:
+      APP_STAGE: development
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
